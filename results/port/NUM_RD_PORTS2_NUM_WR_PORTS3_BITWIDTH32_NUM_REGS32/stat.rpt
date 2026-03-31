@@ -1,0 +1,44 @@
+
+17. Printing statistics.
+
+=== regfile ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     5863        - wires
+     8092        - wire bits
+        8        - public wires
+     1214        - public wire bits
+        7        - ports
+      190        - port bits
+     7966 1.34E+05 cells
+      248 3.15E+03   sg13g2_a21o_1
+      688 6.24E+03   sg13g2_a21oi_1
+      320 4.64E+03   sg13g2_a221oi_1
+      681 7.39E+03   sg13g2_a22oi_1
+       74  671.328   sg13g2_and2_1
+        8  101.606   sg13g2_and3_1
+        5   72.576   sg13g2_and4_1
+     1024 5.02E+04   sg13g2_dfrbpq_1
+      201 1.09E+03   sg13g2_inv_1
+      383 6.95E+03   sg13g2_mux2_1
+      515 1.96E+04   sg13g2_mux4_1
+      531 3.85E+03   sg13g2_nand2_1
+      124 1.12E+03   sg13g2_nand2b_1
+      182 1.65E+03   sg13g2_nand3_1
+        2   25.402   sg13g2_nand3b_1
+      437 4.76E+03   sg13g2_nand4_1
+      425  3084.48   sg13g2_nor2_1
+       17  154.224   sg13g2_nor2b_1
+      354 3.21E+03   sg13g2_nor3_1
+      265 2.88E+03   sg13g2_nor4_1
+     1344 1.22E+04   sg13g2_o21ai_1
+      118 1.07E+03   sg13g2_or2_1
+        3   38.102   sg13g2_or3_1
+        6   87.091   sg13g2_or4_1
+       11  159.667   sg13g2_xnor2_1
+
+   Chip area for module '\regfile': 134395.896600
+     of which used for sequential elements: 50164.531200 (37.33%)
+

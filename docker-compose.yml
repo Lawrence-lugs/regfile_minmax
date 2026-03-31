@@ -1,0 +1,49 @@
+services:
+  regfile-study:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: regfile_minmax:latest
+    container_name: regfile_minmax
+    volumes:
+      - .:/workspace/regfile_minmax
+      # Persist conda pkgs across rebuilds (speeds up iterative builds)
+      - conda_pkgs:/root/miniforge3/pkgs
+    ports:
+      - "8888:8888"
+    environment:
+      - PDK_ROOT=/foss/pdks
+      # IHP SG13G2 typical 1.2V / 25°C corner — override if using a different corner
+      - LIBERTY_FILE=/foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+    working_dir: /workspace/regfile_minmax
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+  # Convenience target: spin up Jupyter and open in browser
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: regfile_minmax:latest
+    container_name: regfile_minmax_jupyter
+    volumes:
+      - .:/workspace/regfile_minmax
+      - conda_pkgs:/root/miniforge3/pkgs
+    ports:
+      - "8888:8888"
+    environment:
+      - PDK_ROOT=/foss/pdks
+      - LIBERTY_FILE=/foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+    working_dir: /workspace/regfile_minmax
+    command: >
+      jupyter lab
+        --ip=0.0.0.0
+        --port=8888
+        --no-browser
+        --allow-root
+        --NotebookApp.token=''
+        --NotebookApp.password=''
+
+volumes:
+  conda_pkgs:

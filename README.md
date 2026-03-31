@@ -1,0 +1,184 @@
+# regfile_minmax
+
+Investigating the area-scaling behaviour of parameterizable register files synthesised with **Yosys** targeting the **IHP SG13G2 130 nm** open-source standard-cell PDK.
+
+Reproduces and extends the analysis of:
+
+> Zyuban V., Kogge P. (1998). *The Energy Complexity of Register Files.*
+> Proceedings of the 1998 International Symposium on Low Power Electronics and Design (**ISLPED '98**).
+> DOI [10.1145/280756.280943](https://dl.acm.org/doi/10.1145/280756.280943)
+
+The paper characterises register-file area and power for **custom VLSI** as scaling roughly as O(N·P²) where N is the register count and P = Nᵣ + N_w is the total port count.
+Here we check whether that prediction survives a standard-cell synthesis flow.
+
+---
+
+## Key findings
+
+| Metric | Paper (custom VLSI) | This work (std-cell, Yosys + IHP SG13G2) |
+|---|---|---|
+| Area ~ P^α  (port scaling) | α ≈ 2.0 | **α ≈ 0.55** |
+| Area vs bit-width | Linear | Linear ✓ |
+| Area vs register count | Linear–super-linear | Near-linear ✓ |
+| Banking reduces area? | Yes (at high port counts) | Yes ✓ |
+
+Standard-cell synthesis is **sub-quadratic** in port count because read ports map to independent mux trees that share the same FF array — unlike custom bitcell arrays where every extra port adds physical bit-line routing.
+Write ports are consistently more expensive per port than read ports in both the paper and this work.
+
+---
+
+## Results
+
+### Port sweep (32 regs × 32-bit, IHP SG13G2)
+
+Area as a function of read-port count (coloured by write-port count) and write-port count (coloured by read-port count):
+
+![Port sweep](results/port_sweep.png)
+
+### Area scaling — power-law fit
+
+Log-log fit across all (Nᵣ, N_w) combinations. The fitted exponent α is shown against the paper's prediction of ≈ 2.0:
+
+![Power-law fit](results/port_scaling_fit.png)
+
+### Area heatmap
+
+Chip area (×10³ µm²) for every (Nᵣ, N_w) combination at 32 regs × 32-bit:
+
+![Area heatmap](results/area_heatmap.png)
+
+### Bit-width sweep (2R1W, 32 regs)
+
+Area scales linearly with bit-width, matching the paper's prediction:
+
+![Bit-width sweep](results/bitwidth_sweep.png)
+
+### Register count sweep (2R1W, 32-bit)
+
+Area is near-linear in register count (slight super-linearity from deeper address muxes):
+
+![Register count sweep](results/regcount_sweep.png)
+
+### Banking sweep (32 regs × 32-bit)
+
+Read-port banking: each bank stores all registers but serves only Nᵣ / NUM_BANKS read ports.
+Higher port counts see a greater benefit from banking (right panel: normalised to 1-bank baseline):
+
+![Banking sweep](results/banking_sweep.png)
+
+---
+
+## Project structure
+
+```
+regfile_minmax/
+├── Dockerfile               # iic_osic_tools + vim_deploy (nvim + verible LS) + conda env
+├── docker-compose.yml       # Two services: interactive shell & JupyterLab on :8888
+├── environment.yml          # Conda packages: pandas, plotly, matplotlib, jupyter, …
+├── rtl/
+│   ├── regfile.sv           # Flat multi-port register file (synthesisable SV)
+│   └── regfile_banked.sv    # Banked variant (NUM_BANKS sub-files, write broadcast)
+├── flow/
+│   ├── synth.tcl            # Yosys -c Tcl script: elaborate → map → stat report
+│   ├── run_sweep.py         # Parameter sweep runner; caches finished runs
+│   ├── parse_reports.py     # Yosys 0.60 stat-report parser
+│   ├── generate_plots.py    # Headless matplotlib PNG generator
+│   └── smoke_test.sh        # Quick single-config synthesis sanity check
+├── notebooks/
+│   └── analysis.ipynb       # Interactive Plotly + matplotlib analysis notebook
+└── results/
+    ├── summary.csv          # All synthesis results (one row per config)
+    └── *.png                # Generated plots
+```
+
+---
+
+## Quick start
+
+### 1 · Build and enter the container
+
+```bash
+docker compose run regfile-study
+```
+
+### 2 · Run the synthesis sweep
+
+```bash
+# All sweeps (~15 min first time; subsequent runs use cached stat.rpts)
+python flow/run_sweep.py --sweep all
+
+# Individual sweeps: port | bitwidth | regcount | banking
+python flow/run_sweep.py --sweep port
+```
+
+### 3 · Generate plots
+
+```bash
+python flow/generate_plots.py        # writes results/*.png
+```
+
+### 4 · Interactive Plotly notebook
+
+From **outside** the container (or a second terminal):
+
+```bash
+docker compose up jupyter
+# open http://localhost:8888 → notebooks/analysis.ipynb
+```
+
+### Smoke test (single synthesis)
+
+```bash
+bash flow/smoke_test.sh
+```
+
+---
+
+## RTL parameters
+
+### `regfile` (flat)
+
+| Parameter | Default | Description |
+|---|---|---|
+| `NUM_RD_PORTS` | 2 | Simultaneous read ports (async) |
+| `NUM_WR_PORTS` | 1 | Simultaneous write ports (sync) |
+| `BITWIDTH` | 32 | Register width in bits |
+| `NUM_REGS` | 32 | Number of registers |
+
+### `regfile_banked`
+
+All parameters of `regfile`, plus:
+
+| Parameter | Default | Description |
+|---|---|---|
+| `NUM_BANKS` | 2 | Number of banks (`NUM_RD_PORTS` must be divisible by `NUM_BANKS`) |
+
+Banking strategy: each bank is a full copy of `regfile` with `NUM_RD_PORTS/NUM_BANKS` read ports.
+All write ports are broadcast to every bank. The trade-off is ×`NUM_BANKS` FF area against smaller per-bank mux trees.
+
+---
+
+## Synthesis flow
+
+```
+read_verilog -sv rtl/regfile.sv
+chparam  (per-run overrides)
+hierarchy → proc → flatten → opt → memory → techmap → dfflibmap → abc → opt_clean
+stat -liberty  →  results/<run_id>/stat.rpt
+```
+
+Target liberty: `$PDK_ROOT/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib`
+(1.2 V, 25 °C typical corner, included in [iic-osic-tools](https://github.com/iic-jku/iic-osic-tools))
+
+---
+
+## Environment
+
+Built on top of **[hpretl/iic-osic-tools](https://github.com/iic-jku/iic-osic-tools)** with [vim_deploy](https://github.com/Lawrence-lugs/vim_deploy) customisations (Neovim + Verible language server + Miniforge).
+
+| Tool | Version |
+|---|---|
+| Yosys | 0.60 |
+| IHP SG13G2 PDK | via iic-osic-tools |
+| Python | 3.14 (Miniforge base) |
+| Neovim + Verible LS | via vim_deploy |
