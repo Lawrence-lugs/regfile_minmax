@@ -1,0 +1,11 @@
+# Per-run synthesis artifacts (too large/numerous to commit)
+results/*/*/netlist.v
+results/*/*/yosys.log
+results/smoke/
+
+# Pyc / cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Keep: results/summary.csv and results/*.png

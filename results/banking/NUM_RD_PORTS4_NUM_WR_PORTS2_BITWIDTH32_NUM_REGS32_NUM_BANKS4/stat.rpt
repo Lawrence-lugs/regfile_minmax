@@ -1,0 +1,44 @@
+
+19. Printing statistics.
+
+=== regfile_banked ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    13351        - wires
+    17662        - wire bits
+       11        - public wires
+     4322        - public wire bits
+        7        - ports
+      226        - port bits
+    17564 3.57E+05 cells
+      376 4.78E+03   sg13g2_a21o_1
+     2649  2.4E+04   sg13g2_a21oi_1
+       68  987.034   sg13g2_a221oi_1
+     1073 1.16E+04   sg13g2_a22oi_1
+      198  1.8E+03   sg13g2_and2_1
+        7   88.906   sg13g2_and3_1
+      130 1.89E+03   sg13g2_and4_1
+     4096 2.01E+05   sg13g2_dfrbpq_1
+      178   968.89   sg13g2_inv_1
+      202 3.67E+03   sg13g2_mux2_1
+     1050    4E+04   sg13g2_mux4_1
+      858 6.23E+03   sg13g2_nand2_1
+       91  825.552   sg13g2_nand2b_1
+      190  1723.68   sg13g2_nand3_1
+        4   50.803   sg13g2_nand3b_1
+      270 2.94E+03   sg13g2_nand4_1
+      793 5.76E+03   sg13g2_nor2_1
+       16  145.152   sg13g2_nor2b_1
+      249 2.26E+03   sg13g2_nor3_1
+      335 3.65E+03   sg13g2_nor4_1
+     4473 4.06E+04   sg13g2_o21ai_1
+      242  2.2E+03   sg13g2_or2_1
+        3   38.102   sg13g2_or3_1
+        5   72.576   sg13g2_or4_1
+        8  116.122   sg13g2_xnor2_1
+
+   Chip area for module '\regfile_banked': 357080.535000
+     of which used for sequential elements: 200658.124800 (56.19%)
+
