@@ -2,6 +2,7 @@
   "name": "regfile_minmax",
   "dockerComposeFile": "docker-compose.yml",
   "service": "regfile-study",
+  "runServices": ["regfile-study"],
   "workspaceFolder": "/workspace/regfile_minmax",
   "shutdownAction": "stopCompose",
   "customizations": {
