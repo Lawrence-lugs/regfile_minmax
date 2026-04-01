@@ -2,16 +2,17 @@
 
 Investigating the area-scaling behaviour of parameterizable register files synthesised with **Yosys** targeting the **IHP SG13G2 130 nm** open-source standard-cell PDK.
 
-Reproduces and extends the analysis of:
+Analyzes RegFile scaling behavior similar to:
 
 > Zyuban V., Kogge P. (1998). *The Energy Complexity of Register Files.*
 > Proceedings of the 1998 International Symposium on Low Power Electronics and Design (**ISLPED '98**).
 > DOI [10.1145/280756.280943](https://dl.acm.org/doi/10.1145/280756.280943)
 
-The paper characterises register-file area and power for **custom VLSI** as scaling roughly as O(N·P²) where N is the register count and P = Nᵣ + N_w is the total port count.
-Here we check whether that prediction survives a standard-cell synthesis flow.
+The paper characterises register-file area and power as scaling roughly as O(N·P²) where N is the register count and P = Nᵣ + N_w is the total port count.
 
---
+We check whether this prediction matches modern PDKs.
+
+---
 
 ## Todo/Questions
 
