@@ -5,7 +5,7 @@ run_sweep.py — Sweep register-file parameters through Yosys synthesis
 
 Usage (from the repo root inside the Docker container):
     python flow/run_sweep.py [--sweep all|port|bitwidth|regcount|banking]
-                             [--jobs N]
+                             [--force]
 
 Outputs:
     results/summary.csv        — all runs, one row per configuration
@@ -129,6 +129,7 @@ def run_one(
     rtl_files: list[Path],
     top: str,
     params: dict[str, int],
+    force: bool = False,
 ) -> dict:
     """Run one Yosys synthesis (or load cached result) and return a metrics dict."""
     out_dir = RESULTS_DIR / run_id
@@ -136,8 +137,9 @@ def run_one(
 
     stat_rpt = out_dir / "stat.rpt"
 
-    # Skip synthesis if a valid report already exists from a previous run
-    if stat_rpt.exists() and stat_rpt.stat().st_size > 0:
+    # Skip synthesis if a valid report already exists from a previous run.
+    # In force mode, always resynthesize to reflect RTL/flow changes.
+    if (not force) and stat_rpt.exists() and stat_rpt.stat().st_size > 0:
         metrics = parse_report_file(stat_rpt)
         return {
             "run_id": run_id, "top": top, "status": "OK",
@@ -194,7 +196,7 @@ def run_one(
 # Sweep runner
 # ---------------------------------------------------------------------------
 
-def run_sweep(sweep_name: str, sweep_def: dict) -> list[dict]:
+def run_sweep(sweep_name: str, sweep_def: dict, force: bool = False) -> list[dict]:
     """Enumerate all parameter combinations for one sweep and synthesize."""
     param_names  = list(sweep_def["params"].keys())
     param_values = list(sweep_def["params"].values())
@@ -215,6 +217,7 @@ def run_sweep(sweep_name: str, sweep_def: dict) -> list[dict]:
             rtl_files  = sweep_def["rtl_files"],
             top        = sweep_def["top"],
             params     = cfg,
+            force      = force,
         )
         row["sweep"] = sweep_name
         rows.append(row)
@@ -233,6 +236,11 @@ def main():
         default="all",
         choices=["all"] + list(SWEEPS.keys()),
         help="Which sweep(s) to run (default: all)",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force rerun synthesis even if cached stat reports exist",
     )
     args = parser.parse_args()
 
@@ -255,7 +263,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"  Running sweep: {name}")
         print(f"{'='*60}")
-        rows = run_sweep(name, SWEEPS[name])
+        rows = run_sweep(name, SWEEPS[name], force=args.force)
         all_rows.extend(rows)
 
         # Merge with prior rows (deduplicate by run_id, new wins)

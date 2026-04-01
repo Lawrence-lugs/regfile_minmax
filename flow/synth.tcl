@@ -19,6 +19,25 @@
 if {![info exists TOP]}        { set TOP        "regfile"            }
 if {![info exists LIBERTY]}    { set LIBERTY    $::env(LIBERTY_FILE) }
 if {![info exists REPORT_DIR]} { set REPORT_DIR "results"            }
+if {![info exists SDC_FILE]}   { set SDC_FILE   [file join [file dirname [info script]] "abc_files" "constraints.sdc"] }
+if {![info exists PERIOD_PS]}  { set PERIOD_PS  10000                }
+
+# Process an ABC script into REPORT_DIR and patch paths for this repository.
+proc processAbcScript {abc_script report_dir} {
+    file mkdir $report_dir
+    set abc_out_path [file join $report_dir [file tail $abc_script]]
+    set raw [read -nonewline [open $abc_script r]]
+
+    # Croc-style placeholder and local path rewrite for LMS AIG library.
+    set lms_aig [file join [file dirname [info script]] "abc_files" "lazy_man_synth_library.aig"]
+    set processed [string map [list "{REC_AIG}" $lms_aig "src/lazy_man_synth_library.aig" $lms_aig] $raw]
+
+    set abc_out [open $abc_out_path w]
+    puts -nonewline $abc_out $processed
+    flush $abc_out
+    close $abc_out
+    return $abc_out_path
+}
 
 # --- Read Design -------------------------------------------------------------
 # In yosys -c (Tcl) mode every yosys pass is invoked as: yosys <pass> <args>
@@ -36,8 +55,9 @@ if {[info exists P_NUM_BANKS]}    { yosys chparam -set NUM_BANKS    $P_NUM_BANKS
 # --- Elaboration & Generic Synthesis -----------------------------------------
 yosys hierarchy -check -top $TOP
 yosys proc
+# Run opt after every major step
 yosys flatten
-yosys opt -full
+yosys opt -full 
 yosys memory -nomap
 yosys opt -full
 
@@ -45,8 +65,19 @@ yosys opt -full
 yosys techmap
 yosys opt -full
 yosys dfflibmap -liberty $LIBERTY
-yosys abc       -liberty $LIBERTY
+yosys clean -purge
 yosys opt_clean -purge
+
+
+# --- ABC Mapping (optional) ------------------------------------------------------
+# ABC lazy man synthesis script based off PULP/croc 
+set tech_cells_args [list -liberty $LIBERTY]
+set dont_use_args [list]
+set abc_script_path [file join [file dirname [info script]] "abc_files" "abc-opt.script"]
+set abc_comb_script [processAbcScript $abc_script_path $REPORT_DIR]
+yosys abc {*}$tech_cells_args -D $PERIOD_PS -script $abc_comb_script -constr $SDC_FILE {*}$dont_use_args -showtmp
+yosys clean -purge
+
 
 # --- Reports -----------------------------------------------------------------
 file mkdir $REPORT_DIR
