@@ -108,23 +108,13 @@ regfile_minmax/
 docker compose run regfile-study
 ```
 
-### 2 · Run the synthesis sweep
+### 2 · Run the full analysis flow (recommended)
 
 ```bash
-# All sweeps (~15 min first time; subsequent runs use cached stat.rpts)
-python flow/run_sweep.py --sweep all
-
-# Individual sweeps: port | bitwidth | regcount | banking
-python flow/run_sweep.py --sweep port
+make plot
 ```
 
-### 3 · Generate plots
-
-```bash
-python flow/generate_plots.py        # writes results/*.png
-```
-
-### 4 · Interactive Plotly notebook
+### 3 · Interactive Plotly notebook
 
 From **outside** the container (or a second terminal):
 
@@ -136,7 +126,23 @@ docker compose up jupyter
 ### Smoke test (single synthesis)
 
 ```bash
-bash flow/smoke_test.sh
+make smoke
+```
+
+### Python-based calls
+
+For custom debugging or ad-hoc runs, the Python scripts can still be used
+directly:
+
+```bash
+# All sweeps
+python flow/run_sweep.py --sweep all
+
+# Single sweep
+python flow/run_sweep.py --sweep port
+
+# Regenerate plots from summary.csv
+python flow/generate_plots.py
 ```
 
 ---

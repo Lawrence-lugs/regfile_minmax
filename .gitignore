@@ -2,6 +2,8 @@
 results/*/*/netlist.v
 results/*/*/yosys.log
 results/smoke/
+results/*/*/abc-opt.script
+results/
 
 # Pyc / cache
 __pycache__/
@@ -9,3 +11,4 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Keep: results/summary.csv and results/*.png
+
