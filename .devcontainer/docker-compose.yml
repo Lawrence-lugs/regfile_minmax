@@ -1,12 +1,12 @@
 services:
   regfile-study:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     image: regfile_minmax:latest
     container_name: regfile_minmax
     volumes:
-      - .:/workspace/regfile_minmax
+      - ..:/workspace/regfile_minmax
       # Persist conda pkgs across rebuilds (speeds up iterative builds)
       - conda_pkgs:/root/miniforge3/pkgs
     ports:
@@ -23,12 +23,12 @@ services:
   # Convenience target: spin up Jupyter and open in browser
   jupyter:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     image: regfile_minmax:latest
     container_name: regfile_minmax_jupyter
     volumes:
-      - .:/workspace/regfile_minmax
+      - ..:/workspace/regfile_minmax
       - conda_pkgs:/root/miniforge3/pkgs
     ports:
       - "8888:8888"

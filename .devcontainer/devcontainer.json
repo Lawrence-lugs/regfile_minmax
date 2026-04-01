@@ -1,0 +1,17 @@
+{
+  "name": "regfile_minmax",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "regfile-study",
+  "workspaceFolder": "/workspace/regfile_minmax",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "lramseyer.vaporview",
+        "eirikpre.systemverilog",
+        "chipsalliance.verible-vscode"
+      ]
+    }
+  }
+}

@@ -39,4 +39,3 @@ RUN mamba env update -n base -f /tmp/project_environment.yml && \
     conda clean -afy
 
 WORKDIR /workspace
-
