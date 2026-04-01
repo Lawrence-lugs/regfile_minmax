@@ -1,9 +1,5 @@
-# Per-run synthesis artifacts (too large/numerous to commit)
-results/*/*/netlist.v
-results/*/*/yosys.log
-results/smoke/
-results/*/*/abc-opt.script
-results/
+# Ignore folders inside results but keep the files in results/
+results/*/
 
 # Pyc / cache
 __pycache__/
