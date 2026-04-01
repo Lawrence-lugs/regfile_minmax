@@ -11,6 +11,12 @@ Reproduces and extends the analysis of:
 The paper characterises register-file area and power for **custom VLSI** as scaling roughly as O(N·P²) where N is the register count and P = Nᵣ + N_w is the total port count.
 Here we check whether that prediction survives a standard-cell synthesis flow.
 
+--
+
+## Todo/Questions
+
+- [ ] Why are we sqrt with respect to ports? This means we're sublinear. That doesn't make sense.
+
 ---
 
 ## Key findings
