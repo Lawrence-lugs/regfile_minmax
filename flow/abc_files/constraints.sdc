@@ -1,0 +1,5 @@
+# Generic constraints
+# Used by ABC mapping 
+
+set_driving_cell sg13g2_buf_1
+set_load 0.015
