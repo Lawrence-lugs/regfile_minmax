@@ -18,7 +18,7 @@ services:
     working_dir: /workspace/regfile_minmax
     stdin_open: true
     tty: true
-    command: /bin/bash
+    command: ["--skip", "bash"]
 
   # Convenience target: spin up Jupyter and open in browser
   jupyter:
