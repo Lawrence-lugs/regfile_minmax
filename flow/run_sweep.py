@@ -27,15 +27,16 @@ import pandas as pd
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent))
-from parse_reports import parse_report_file
+from parse_reports import parse_report_file, parse_pnr_report_file
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 
-YOSYS_CMD   = os.environ.get("YOSYS_CMD", "yosys")
-TCL_SCRIPT  = Path(__file__).parent / "synth.tcl"
-LIBERTY     = os.environ.get(
+YOSYS_CMD         = os.environ.get("YOSYS_CMD", "yosys")
+TCL_SCRIPT        = Path(__file__).parent / "synth.tcl"
+SWEEP_UTIL_SCRIPT = Path(__file__).parent / "pnr" / "sweep_utilization.py"
+LIBERTY      = os.environ.get(
     "LIBERTY_FILE",
     "/foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib/"
     "sg13g2_stdcell_typ_1p20V_25C.lib",
@@ -124,14 +125,51 @@ PARAM_MAP = {
 }
 
 
+def run_pnr(
+    out_dir: Path,
+    top: str,
+    force: bool = False,
+) -> dict:
+    """Run OpenROAD global-placement area estimate and return PnR metrics."""
+    pnr_rpt = out_dir / "gpl-pnr.rpt"
+    netlist = out_dir / "netlist.v"
+
+    if not netlist.exists():
+        return {}
+
+    # Use cached PnR report when available (unless forcing)
+    if (not force) and pnr_rpt.exists() and pnr_rpt.stat().st_size > 0:
+        return parse_pnr_report_file(pnr_rpt)
+
+    result = subprocess.run(
+        [
+            sys.executable, str(SWEEP_UTIL_SCRIPT),
+            "--top", top,
+            "--netlist", str(netlist),
+            "--report-dir", str(out_dir),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    if result.returncode != 0:
+        print(f"\n[PnR FAIL] {out_dir}\n{result.stderr[-2000:]}", file=sys.stderr)
+        return {}
+
+    if pnr_rpt.exists():
+        return parse_pnr_report_file(pnr_rpt)
+    return {}
+
+
 def run_one(
     run_id: str,
     rtl_files: list[Path],
     top: str,
     params: dict[str, int],
     force: bool = False,
+    skip_pnr: bool = False,
 ) -> dict:
-    """Run one Yosys synthesis (or load cached result) and return a metrics dict."""
+    """Run one Yosys synthesis (+ optional PnR estimate) and return a metrics dict."""
     out_dir = RESULTS_DIR / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -141,9 +179,12 @@ def run_one(
     # In force mode, always resynthesize to reflect RTL/flow changes.
     if (not force) and stat_rpt.exists() and stat_rpt.stat().st_size > 0:
         metrics = parse_report_file(stat_rpt)
+        pnr_metrics = {}
+        if not skip_pnr:
+            pnr_metrics = run_pnr(out_dir, top, force=force)
         return {
             "run_id": run_id, "top": top, "status": "OK",
-            **params, **metrics,
+            **params, **metrics, **pnr_metrics,
         }
 
     rtl_list = " ".join(str(f) for f in rtl_files)
@@ -183,12 +224,18 @@ def run_one(
     stat_rpt = out_dir / "stat.rpt"
     metrics = parse_report_file(stat_rpt) if stat_rpt.exists() else {}
 
+    # Run PnR placement estimate on the synthesised netlist
+    pnr_metrics = {}
+    if not skip_pnr:
+        pnr_metrics = run_pnr(out_dir, top, force=force)
+
     return {
         "run_id":  run_id,
         "top":     top,
         "status":  "OK",
         **params,
         **metrics,
+        **pnr_metrics,
     }
 
 
@@ -196,7 +243,10 @@ def run_one(
 # Sweep runner
 # ---------------------------------------------------------------------------
 
-def run_sweep(sweep_name: str, sweep_def: dict, force: bool = False) -> list[dict]:
+def run_sweep(
+    sweep_name: str, sweep_def: dict,
+    force: bool = False, skip_pnr: bool = False,
+) -> list[dict]:
     """Enumerate all parameter combinations for one sweep and synthesize."""
     param_names  = list(sweep_def["params"].keys())
     param_values = list(sweep_def["params"].values())
@@ -218,6 +268,7 @@ def run_sweep(sweep_name: str, sweep_def: dict, force: bool = False) -> list[dic
             top        = sweep_def["top"],
             params     = cfg,
             force      = force,
+            skip_pnr   = skip_pnr,
         )
         row["sweep"] = sweep_name
         rows.append(row)
@@ -242,6 +293,11 @@ def main():
         action="store_true",
         help="Force rerun synthesis even if cached stat reports exist",
     )
+    parser.add_argument(
+        "--skip-pnr",
+        action="store_true",
+        help="Skip OpenROAD PnR placement area estimation",
+    )
     args = parser.parse_args()
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -263,7 +319,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"  Running sweep: {name}")
         print(f"{'='*60}")
-        rows = run_sweep(name, SWEEPS[name], force=args.force)
+        rows = run_sweep(name, SWEEPS[name], force=args.force, skip_pnr=args.skip_pnr)
         all_rows.extend(rows)
 
         # Merge with prior rows (deduplicate by run_id, new wins)

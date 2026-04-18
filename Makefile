@@ -5,6 +5,8 @@ SWEEP  ?= all
 
 FLOW_DEPS := flow/run_sweep.py flow/parse_reports.py flow/synth.tcl
 FLOW_DEPS += $(wildcard flow/abc_files/*)
+FLOW_DEPS += flow/pnr/estimate_placement_area.tcl flow/pnr/init_tech.tcl
+FLOW_DEPS += flow/pnr/reports.tcl flow/pnr/reports_area.tcl flow/pnr/constraints.sdc
 RTL_DEPS  := $(wildcard rtl/*.sv)
 SYNTH_DEPS := $(FLOW_DEPS) $(RTL_DEPS)
 
@@ -13,25 +15,29 @@ PLOT_FILES := results/port_sweep.png results/port_scaling_fit.png results/bitwid
 	results/regcount_sweep.png results/banking_sweep.png results/area_heatmap.png
 
 .PHONY: help sweep sweep-all sweep-port sweep-bitwidth sweep-regcount sweep-banking \
-	plot smoke clean
+	sweep-synth-only plot smoke clean
 
 help:
-	@echo "Regfile synthesis flow"
+	@echo "Regfile synthesis + PnR placement flow"
 	@echo ""
 	@echo "Targets:"
 	@echo "  make sweep              # Build selected results target (SWEEP=all|port|bitwidth|regcount|banking)"
-	@echo "  make sweep-all          # Build all synthesis result folders"
+	@echo "  make sweep-all          # Build all synthesis + PnR result folders"
+	@echo "  make sweep-synth-only   # Build all sweeps (synthesis only, no PnR)"
 	@echo "  make sweep-port         # Build results/port"
 	@echo "  make sweep-bitwidth     # Build results/bitwidth"
 	@echo "  make sweep-regcount     # Build results/regcount"
 	@echo "  make sweep-banking      # Build results/banking"
 	@echo "  make plot               # Build results/*.png from results/summary.csv"
-	@echo "  make smoke              # Run one smoke synthesis"
+	@echo "  make smoke              # Run one smoke synthesis + PnR"
 	@echo "  make clean              # Remove generated plots and summary CSV"
 
 sweep: sweep-$(SWEEP)
 
 sweep-all: results/port results/bitwidth results/regcount results/banking
+
+sweep-synth-only:
+	$(PYTHON) flow/run_sweep.py --sweep all --force --skip-pnr
 
 sweep-port: results/port
 
@@ -63,6 +69,9 @@ results/banking: $(SYNTH_DEPS)
 
 results/summary.csv: results/port results/bitwidth results/regcount results/banking
 	@echo "summary.csv updated by sweep targets"
+
+pnr_gui: results/summary.csv
+	openroad -gui flow/pnr/estimate_placement_area.tcl
 
 $(PLOT_FILES): $(PLOT_DEPS)
 	$(PYTHON) flow/generate_plots.py

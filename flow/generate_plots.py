@@ -23,7 +23,10 @@ if not CSV.exists():
 
 df = pd.read_csv(CSV)
 df = df[df["status"] == "OK"].copy()
+has_pnr = "pnr_total_area_um2" in df.columns and df["pnr_total_area_um2"].notna().any()
 print(f"Loaded {len(df)} successful runs across sweeps: {df['sweep'].unique()}")
+if has_pnr:
+    print(f"  PnR area data available for {df['pnr_total_area_um2'].notna().sum()} runs")
 
 OUT = Path("results")
 
@@ -39,17 +42,23 @@ colors = plt.cm.viridis(np.linspace(0.2, 0.85, port["NUM_WR_PORTS"].nunique()))
 for (nw, grp), c in zip(port.groupby("NUM_WR_PORTS"), colors):
     g = grp.sort_values("NUM_RD_PORTS")
     axes[0].plot(g["NUM_RD_PORTS"], g["chip_area_um2"] / 1e3,
-                 marker="o", color=c, label=f"Nw={nw}")
+                 marker="o", color=c, label=f"Nw={nw} (synth)")
+    if has_pnr and g["pnr_total_area_um2"].notna().any():
+        axes[0].plot(g["NUM_RD_PORTS"], g["pnr_total_area_um2"] / 1e3,
+                     marker="x", ls="--", color=c, label=f"Nw={nw} (PnR)")
 
 axes[0].set_xlabel("Read ports (Nr)")
 axes[0].set_ylabel("Chip area (×10³ µm²)")
 axes[0].set_title("Area vs Read ports")
-axes[0].legend(title="Write ports")
+axes[0].legend(title="Write ports", fontsize=7)
 
 for (nr, grp), c in zip(port.groupby("NUM_RD_PORTS"), plt.cm.plasma(np.linspace(0.15, 0.9, port["NUM_RD_PORTS"].nunique()))):
     g = grp.sort_values("NUM_WR_PORTS")
     axes[1].plot(g["NUM_WR_PORTS"], g["chip_area_um2"] / 1e3,
-                 marker="s", color=c, label=f"Nr={nr}")
+                 marker="s", color=c, label=f"Nr={nr} (synth)")
+    if has_pnr and g["pnr_total_area_um2"].notna().any():
+        axes[1].plot(g["NUM_WR_PORTS"], g["pnr_total_area_um2"] / 1e3,
+                     marker="x", ls="--", color=c, label=f"Nr={nr} (PnR)")
 
 axes[1].set_xlabel("Write ports (Nw)")
 axes[1].set_ylabel("Chip area (×10³ µm²)")
@@ -98,6 +107,8 @@ ref = bw.iloc[0]
 
 fig, ax = plt.subplots(figsize=(7, 4))
 ax.plot(bw["BITWIDTH"], bw["chip_area_um2"] / 1e3, marker="o", lw=2, label="Synthesis")
+if has_pnr and bw["pnr_total_area_um2"].notna().any():
+    ax.plot(bw["BITWIDTH"], bw["pnr_total_area_um2"] / 1e3, marker="x", ls="--", lw=2, label="PnR")
 ax.plot(bw["BITWIDTH"],
         ref["chip_area_um2"] / ref["BITWIDTH"] * bw["BITWIDTH"] / 1e3,
         "k--", alpha=0.5, label="Linear reference")
@@ -118,6 +129,8 @@ ref_rc = rc.iloc[0]
 
 fig, ax = plt.subplots(figsize=(7, 4))
 ax.plot(rc["NUM_REGS"], rc["chip_area_um2"] / 1e3, marker="^", lw=2, label="Synthesis")
+if has_pnr and rc["pnr_total_area_um2"].notna().any():
+    ax.plot(rc["NUM_REGS"], rc["pnr_total_area_um2"] / 1e3, marker="x", ls="--", lw=2, label="PnR")
 ax.plot(rc["NUM_REGS"],
         ref_rc["chip_area_um2"] / ref_rc["NUM_REGS"] * rc["NUM_REGS"] / 1e3,
         "k--", alpha=0.5, label="Linear reference")
@@ -151,7 +164,10 @@ colors_b  = plt.cm.tab10(np.linspace(0, 0.6, len(configs)))
 fig, axes = plt.subplots(1, 2, figsize=(13, 5))
 for cfg, c in zip(configs, colors_b):
     g = bank[bank["config"] == cfg].sort_values("NUM_BANKS")
-    axes[0].plot(g["NUM_BANKS"], g["chip_area_um2"] / 1e3, marker="o", color=c, label=cfg)
+    axes[0].plot(g["NUM_BANKS"], g["chip_area_um2"] / 1e3, marker="o", color=c, label=f"{cfg} (synth)")
+    if has_pnr and g["pnr_total_area_um2"].notna().any():
+        axes[0].plot(g["NUM_BANKS"], g["pnr_total_area_um2"] / 1e3,
+                     marker="x", ls="--", color=c, label=f"{cfg} (PnR)")
     gn = bank_norm[bank_norm["config"] == cfg].sort_values("NUM_BANKS")
     axes[1].plot(gn["NUM_BANKS"], gn["area_norm"], marker="s", color=c, label=cfg)
 
