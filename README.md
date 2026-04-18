@@ -8,15 +8,24 @@ Analyzes RegFile scaling behavior similar to:
 > Proceedings of the 1998 International Symposium on Low Power Electronics and Design (**ISLPED '98**).
 > DOI [10.1145/280756.280943](https://dl.acm.org/doi/10.1145/280756.280943)
 
+> [!note]
+> The above paper actually cites another paper about the quadratic area scaling, but that paper merely mentions it in passing. The above actually has better results (though it only has access energy graphs).
+
 The paper characterises register-file area and power as scaling roughly as O(N·P²) where N is the register count and P = Nᵣ + N_w is the total port count.
 
 We check whether this prediction matches modern PDKs.
 
 ---
 
-## Todo/Questions
+## Conclusion
 
-- [ ] Why are we sqrt with respect to ports? This means we're sublinear. That doesn't make sense.
+Standard assumptions always say regfiles scale quadratically with respect to number of ports.
+However, this only applies to __SRAM-based RegFiles__. The quadratic scaling refers to the bitcell design.
+For "liquid" synthesized regfiles where your memory isn't an SRAM macro, the scaling behavior is actually 
+
+$$Area \approx O(N \cdot \sqrt{P})$$
+
+(Note: likely closer to a log2(P) + P if you think about it, but for "sensible" numbers of ports sqrt might be good enough) 
 
 ---
 
