@@ -1,0 +1,189 @@
+OpenROAD 26Q1-990-g15af3a5c0 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Init standard cells
+Init IO cells
+Init SRAM macros
+Init tech-lef
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/lef/sg13g2_tech.lef, created 19 layers, 70 vias
+Init cell-lef
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/lef/sg13g2_stdcell.lef, created 84 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_io/lef/sg13g2_io.lef, created 22 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_256x8_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_1024x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_1024x8_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_512x8_c3_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_256x64_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_4096x16_c3_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_2048x64_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_8192x32_c4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_512x64_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_1024x64_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_1024x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_256x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_256x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_64x32_c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_512x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_256x48_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_512x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_1024x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_512x8_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_256x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_256x32_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_2P_512x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_256x8_c3_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_512x16_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_64x64_c2_bm_bist.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_4096x8_c3_bm_bist.lef, created 1 library cells
+==================================================
+Testing Core Utilization: 85%
+==================================================
+[INFO IFP-0107] Defining die area using utilization: 85.00% and aspect ratio: 1.
+[INFO IFP-0001] Added 191 rows of 1505 site CoreSite.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 722.445 722.445 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 722.400 721.980 ) um
+[INFO IFP-0102] Core area:                       521558.352 um^2
+[INFO IFP-0103] Total instances area:            443640.758 um^2
+[INFO IFP-0104] Effective utilization:                0.851
+[INFO IFP-0105] Number of instances:                  26988
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 3208
+[INFO PPL-0002] Number of I/O             374
+[INFO PPL-0003] Number of I/O w/sink      374
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 157133.22 um.
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.480  3.780 ) um
+[INFO GPL-0004] CoreBBox: (  0.000  0.000 ) ( 722.400 721.980 ) um
+[INFO GPL-0036] Movable instances area:     443640.758 um^2
+[INFO GPL-0037] Total instances area:       443640.758 um^2
+[INFO GPL-0035] Pin density area adjust:     48065.558 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             26988
+[INFO GPL-0007] Movable instances:               26988
+[INFO GPL-0008] Fixed instances:                     0
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  27106
+[INFO GPL-0011] Number of pins:                 103773
+[INFO GPL-0012] Die BBox:  (  0.000  0.000 ) ( 722.445 722.445 ) um
+[INFO GPL-0013] Core BBox: (  0.000  0.000 ) ( 722.400 721.980 ) um
+[INFO GPL-0016] Core area:                  521558.352 um^2
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                521558.352 um^2
+[INFO GPL-0017] Fixed instances area:            0.000 um^2
+[INFO GPL-0018] Movable instances area:     491706.317 um^2
+[INFO GPL-0019] Utilization:                    94.276 %
+[INFO GPL-0020] Standard cells area:        491706.317 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 26988	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.05502145 HPWL: 550077920
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000010 HPWL: 427258694
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000010 HPWL: 436156067
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000012 HPWL: 437024343
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000008 HPWL: 437304869
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[WARNING GPL-0302] Target density 0.7000 is too low for the available free area.
+Automatically adjusting to uniform density 0.9500.
+[INFO GPL-0023] Placement target density:       0.9500
+[INFO GPL-0024] Movable insts average area:     18.219 um^2
+[INFO GPL-0025] Ideal bin area:                 19.178 um^2
+[INFO GPL-0026] Ideal bin count:                 27195
+[INFO GPL-0027] Total bin area:             521558.352 um^2
+[INFO GPL-0028] Bin count (X, Y):         128 ,    128
+[INFO GPL-0029] Bin size (W * H):       5.644 *  5.640 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0007] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9966 |  2.622493e+05 |   +0.00% |  7.32e-17 |      
+       10 |   0.9888 |  4.171843e+05 |  +59.08% |  1.17e-16 |      
+       20 |   0.9855 |  4.491342e+05 |   +7.66% |  1.90e-16 |      
+       30 |   0.9844 |  4.613998e+05 |   +2.73% |  3.08e-16 |      
+       40 |   0.9829 |  4.759956e+05 |   +3.16% |  4.99e-16 |      
+       50 |   0.9815 |  4.927871e+05 |   +3.53% |  8.10e-16 |      
+       60 |   0.9807 |  5.082524e+05 |   +3.14% |  1.31e-15 |      
+       70 |   0.9802 |  5.199163e+05 |   +2.29% |  2.14e-15 |      
+       80 |   0.9796 |  5.272558e+05 |   +1.41% |  3.47e-15 |      
+       90 |   0.9802 |  5.311331e+05 |   +0.74% |  5.64e-15 |      
+      100 |   0.9810 |  5.319850e+05 |   +0.16% |  9.18e-15 |      
+      110 |   0.9817 |  5.305427e+05 |   -0.27% |  1.49e-14 |      
+      120 |   0.9823 |  5.286000e+05 |   -0.37% |  2.43e-14 |      
+      130 |   0.9827 |  5.272685e+05 |   -0.25% |  3.96e-14 |      
+      140 |   0.9827 |  5.274358e+05 |   +0.03% |  6.45e-14 |      
+      150 |   0.9824 |  5.297980e+05 |   +0.45% |  1.05e-13 |      
+      160 |   0.9820 |  5.359638e+05 |   +1.16% |  1.71e-13 |      
+      170 |   0.9807 |  5.442475e+05 |   +1.55% |  2.78e-13 |      
+      180 |   0.9787 |  5.559251e+05 |   +2.15% |  4.53e-13 |      
+      190 |   0.9756 |  5.689054e+05 |   +2.33% |  7.37e-13 |      
+      200 |   0.9713 |  5.883562e+05 |   +3.42% |  1.20e-12 |      
+      210 |   0.9660 |  6.204747e+05 |   +5.46% |  1.94e-12 |      
+      220 |   0.9593 |  6.578216e+05 |   +6.02% |  3.15e-12 |      
+      230 |   0.9504 |  7.068930e+05 |   +7.46% |  5.11e-12 |      
+      240 |   0.9368 |  7.716446e+05 |   +9.16% |  8.27e-12 |      
+      250 |   0.9189 |  8.434171e+05 |   +9.30% |  1.34e-11 |      
+      260 |   0.8983 |  9.200567e+05 |   +9.09% |  2.16e-11 |      
+      270 |   0.8735 |  1.003331e+06 |   +9.05% |  3.49e-11 |      
+      280 |   0.8439 |  1.087733e+06 |   +8.41% |  5.62e-11 |      
+      290 |   0.8097 |  1.172412e+06 |   +7.78% |  9.08e-11 |      
+      300 |   0.7692 |  1.259230e+06 |   +7.41% |  1.46e-10 |      
+      310 |   0.7234 |  1.338593e+06 |   +6.30% |  2.36e-10 |      
+      320 |   0.6658 |  1.397438e+06 |   +4.40% |  3.83e-10 |      
+      330 |   0.6029 |  1.479381e+06 |   +5.86% |  6.18e-10 |      
+[INFO GPL-0038] Routability snapshot saved at iter = 332
+      331 |   0.5974 |  1.491906e+06 |          |           |      
+      340 |   0.5412 |  1.604281e+06 |   +8.44% |  9.93e-10 |      
+      350 |   0.4909 |  1.675584e+06 |   +4.44% |  1.60e-09 |      
+      360 |   0.4430 |  1.691225e+06 |   +0.93% |  2.61e-09 |      
+      370 |   0.4059 |  1.690055e+06 |   -0.07% |  4.25e-09 |      
+      380 |   0.3660 |  1.722102e+06 |   +1.90% |  6.89e-09 |      
+      390 |   0.3285 |  1.715996e+06 |   -0.35% |  1.09e-08 |      
+      400 |   0.3006 |  1.713041e+06 |   -0.17% |  1.60e-08 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net clk has a large fanout of 4097 terminals.
+[WARNING GRT-0281] Net rst_n has a large fanout of 4097 terminals.
+[INFO GPL-0041] Total routing overflow: 0.7777
+[INFO GPL-0042] Number of overflowed tiles: 11 (0.11%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.9667
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9267
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.8839
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8231
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.9467
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      410 |   0.2693 |  1.709374e+06 |   -0.21% |  2.36e-08 |      
+      420 |   0.2386 |  1.706631e+06 |   -0.16% |  3.48e-08 |      
+      430 |   0.2092 |  1.705843e+06 |   -0.05% |  5.13e-08 |      
+      440 |   0.1826 |  1.706280e+06 |   +0.03% |  7.55e-08 |      
+      450 |   0.1576 |  1.706035e+06 |   -0.01% |  1.11e-07 |      
+      460 |   0.1346 |  1.706018e+06 |   -0.00% |  1.64e-07 |      
+      470 |   0.1146 |  1.706864e+06 |   +0.05% |  2.41e-07 |      
+      479 |   0.0998 |  1.707813e+06 |          |  3.55e-07 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 479
+[INFO GPL-1003] Routability mode iteration count: 69
+[INFO GPL-1005] Routability final weighted congestion: 0.8554
+[INFO GPL-1002] Placed Cell Area            491706.3167
+[INFO GPL-1003] Available Free Area         521558.3520
+[INFO GPL-1004] Minimum Feasible Density        0.9500 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 1.0475
+[INFO GPL-1008]     - For 80% usage of free space: 1.1785
+[INFO GPL-1011] Original area (um^2): 491706.32
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1014] Final placement area: 491706.32 (+0.00%)
+[WARNING GRT-0281] Net clk has a large fanout of 4097 terminals.
+[WARNING GRT-0281] Net rst_n has a large fanout of 4097 terminals.
+Warning: There are 117 input ports missing set_input_delay.
+Warning: There are 256 output ports missing set_output_delay.
+Warning: There are 256 unconstrained endpoints.

@@ -1,6 +1,6 @@
 # regfile_minmax
 
-Investigating the area-scaling behaviour of parameterizable register files synthesised with **Yosys** targeting the **IHP SG13G2 130 nm** open-source standard-cell PDK.
+Investigating the area-scaling behaviour of parameterizable register files synthesised with **Yosys** and placed with **OpenROAD** targeting the **IHP SG13G2 130 nm** open-source standard-cell PDK.
 
 Analyzes RegFile scaling behavior similar to:
 
@@ -17,6 +17,21 @@ We check whether this prediction matches modern PDKs.
 ## Todo/Questions
 
 - [ ] Why are we sqrt with respect to ports? This means we're sublinear. That doesn't make sense.
+
+---
+
+## Synthesis vs PnR area
+
+The flow now collects **two** area estimates for every configuration:
+
+| Source | What it measures | Column in `summary.csv` |
+|---|---|---|
+| **Yosys `stat -liberty`** | Sum of liberty cell areas (no placement, no routing) | `chip_area_um2` |
+| **OpenROAD global placement** | Total std-cell area after floorplanning, pin placement, buffer insertion, and global placement | `pnr_total_area_um2` |
+
+The PnR estimate is more realistic because OpenROAD's `repair_design` may insert buffers and
+`global_placement` accounts for physical density constraints.  The report also provides
+`pnr_die_area_um2`, `pnr_core_area_um2`, `pnr_active_area_um2`, and `pnr_core_utilization`.
 
 ---
 
@@ -87,10 +102,17 @@ regfile_minmax/
 │   └── regfile_banked.sv    # Banked variant (NUM_BANKS sub-files, write broadcast)
 ├── flow/
 │   ├── synth.tcl            # Yosys -c Tcl script: elaborate → map → stat report
-│   ├── run_sweep.py         # Parameter sweep runner; caches finished runs
-│   ├── parse_reports.py     # Yosys 0.60 stat-report parser
+│   ├── run_sweep.py         # Parameter sweep runner (synth + PnR); caches finished runs
+│   ├── parse_reports.py     # Yosys stat + OpenROAD placement report parser
 │   ├── generate_plots.py    # Headless matplotlib PNG generator
-│   └── smoke_test.sh        # Quick single-config synthesis sanity check
+│   ├── smoke_test.sh        # Quick single-config synthesis + PnR sanity check
+│   └── pnr/
+│       ├── estimate_placement_area.tcl  # Parameterized OpenROAD global-placement script
+│       ├── init_tech.tcl                # PDK / liberty / LEF initialisation
+│       ├── constraints.sdc              # Clock & boundary constraints
+│       ├── power_connect.tcl            # Power-net global connections
+│       ├── reports.tcl                  # OpenROAD report_metrics helper
+│       └── reports_area.tcl             # Hierarchical area report
 ├── notebooks/
 │   └── analysis.ipynb       # Interactive Plotly + matplotlib analysis notebook
 └── results/
@@ -108,10 +130,16 @@ regfile_minmax/
 docker compose run regfile-study
 ```
 
-### 2 · Run the full analysis flow (recommended)
+### 2 · Run the full analysis flow (synthesis + PnR, recommended)
 
 ```bash
 make plot
+```
+
+To run only synthesis (no OpenROAD PnR):
+
+```bash
+make sweep-synth-only
 ```
 
 ### 3 · Interactive Plotly notebook
@@ -123,7 +151,7 @@ docker compose up jupyter
 # open http://localhost:8888 → notebooks/analysis.ipynb
 ```
 
-### Smoke test (single synthesis)
+### Smoke test (single synthesis + PnR)
 
 ```bash
 make smoke
@@ -135,11 +163,14 @@ For custom debugging or ad-hoc runs, the Python scripts can still be used
 directly:
 
 ```bash
-# All sweeps
+# All sweeps (synthesis + PnR)
 python flow/run_sweep.py --sweep all
 
 # Single sweep
 python flow/run_sweep.py --sweep port
+
+# Synthesis only (skip PnR placement estimate)
+python flow/run_sweep.py --sweep all --skip-pnr
 
 # Regenerate plots from summary.csv
 python flow/generate_plots.py
@@ -182,6 +213,22 @@ stat -liberty  →  results/<run_id>/stat.rpt
 
 Target liberty: `$PDK_ROOT/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib`
 (1.2 V, 25 °C typical corner, included in [iic-osic-tools](https://github.com/iic-jku/iic-osic-tools))
+
+## PnR placement flow
+
+After synthesis, each netlist is run through **OpenROAD** for a global-placement area estimate:
+
+```
+read_verilog results/<run_id>/netlist.v
+link_design  <top>
+initialize_floorplan → make_tracks → place_pins
+repair_design        (buffer insertion)
+global_placement     (density = 0.60)
+report_metrics       →  results/<run_id>/gpl-pnr.rpt
+```
+
+The PnR report contains die/core/total/active area and core utilization.
+Use `--skip-pnr` to skip this step if only synthesis area is needed.
 
 ---
 

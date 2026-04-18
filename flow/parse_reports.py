@@ -94,3 +94,49 @@ def parse_report_file(path: Path) -> dict:
         "n_pub_wires":    counts.get("public wires"),
         "n_ports":        counts.get("ports"),
     }
+
+
+# ---------------------------------------------------------------------------
+# PnR (OpenROAD) placement report parsing
+# ---------------------------------------------------------------------------
+
+def parse_pnr_die_area(report: str) -> float | None:
+    """Return die area (µm²) from OpenROAD placement report."""
+    m = re.search(r"Die Area:\s*([\d.]+)\s*um2", report)
+    return float(m.group(1)) if m else None
+
+
+def parse_pnr_core_area(report: str) -> float | None:
+    """Return core area (µm²) from OpenROAD placement report."""
+    m = re.search(r"Core Area:\s*([\d.]+)\s*um2", report)
+    return float(m.group(1)) if m else None
+
+
+def parse_pnr_total_area(report: str) -> float | None:
+    """Return total cell area (µm²) from OpenROAD placement report."""
+    m = re.search(r"Total Area:\s*([\d.]+)\s*um2", report)
+    return float(m.group(1)) if m else None
+
+
+def parse_pnr_total_active_area(report: str) -> float | None:
+    """Return total active area (µm²) from OpenROAD placement report."""
+    m = re.search(r"Total Active Area:\s*([\d.]+)\s*um2", report)
+    return float(m.group(1)) if m else None
+
+
+def parse_pnr_core_utilization(report: str) -> float | None:
+    """Return core utilization fraction from OpenROAD placement report."""
+    m = re.search(r"Core Utilization:\s*([\d.]+)", report)
+    return float(m.group(1)) if m else None
+
+
+def parse_pnr_report_file(path: Path) -> dict:
+    """Parse an OpenROAD placement report (.rpt) and return PnR metrics."""
+    text = load_report(path)
+    return {
+        "pnr_die_area_um2":      parse_pnr_die_area(text),
+        "pnr_core_area_um2":     parse_pnr_core_area(text),
+        "pnr_total_area_um2":    parse_pnr_total_area(text),
+        "pnr_active_area_um2":   parse_pnr_total_active_area(text),
+        "pnr_core_utilization":  parse_pnr_core_utilization(text),
+    }

@@ -11,7 +11,8 @@
         "eamodio.gitlens",
         "lramseyer.vaporview",
         "eirikpre.systemverilog",
-        "chipsalliance.verible-vscode"
+        "chipsalliance.verible-vscode",
+        "ms-python.python"
       ]
     }
   }
