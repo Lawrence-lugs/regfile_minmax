@@ -64,6 +64,9 @@ results/banking: $(SYNTH_DEPS)
 results/summary.csv: results/port results/bitwidth results/regcount results/banking
 	@echo "summary.csv updated by sweep targets"
 
+pnr_gui: results/summary.csv
+	PDKPATH=$(PDKPATH) openroad -gui flow/pnr/estimate_placement_area.tcl
+
 $(PLOT_FILES): $(PLOT_DEPS)
 	$(PYTHON) flow/generate_plots.py
 

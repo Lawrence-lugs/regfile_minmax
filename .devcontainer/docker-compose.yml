@@ -1,11 +1,11 @@
 services:
   regfile-study:
-    image: ghcr.io/Lawrence-lugs/regfile_minmax/regfile-study:latest
+    image: ghcr.io/lawrence-lugs/regfile_minmax/regfile-study:latest
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       cache_from:
-        - ghcr.io/Lawrence-lugs/regfile_minmax/regfile-study:buildcache
+        - ghcr.io/lawrence-lugs/regfile_minmax/regfile-study:buildcache
     container_name: regfile_minmax
     volumes:
       - ..:/workspace/regfile_minmax
@@ -24,12 +24,12 @@ services:
 
   # Convenience target: spin up Jupyter and open in browser
   jupyter:
-    image: ghcr.io/Lawrence-lugs/regfile_minmax/regfile-study:latest
+    image: ghcr.io/lawrence-lugs/regfile_minmax/regfile-study:latest
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       cache_from:
-        - ghcr.io/Lawrence-lugs/regfile_minmax/regfile-study:buildcache
+        - ghcr.io/lawrence-lugs/regfile_minmax/regfile-study:buildcache
     container_name: regfile_minmax_jupyter
     volumes:
       - ..:/workspace/regfile_minmax
