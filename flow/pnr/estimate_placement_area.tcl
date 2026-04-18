@@ -39,3 +39,6 @@ repair_design -verbose
 # Global placement frfr
 set_thread_count 8
 global_placement -density 0.60
+
+source flow/pnr/reports.tcl
+report_metrics "gpl-${proj_name}.csv"
